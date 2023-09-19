@@ -25,7 +25,6 @@ A simple DIY Arduino-based device to measure the input-to-action latency in 3D g
 ### So what about the "click-to-photon"?
 
 * The device can also measure "click-to-photon" by appropriately modifying the software it's running, if one wanted to.
-* The software of most other devices can be modified to measure latency the way this device measures latency, but they will not be as unobtrusive without some HW modifications. Also, some of them are not open source - so modifying the software is only possible by the original manufacturer.
 
 ## 2. Building the device
 
@@ -55,14 +54,16 @@ You should be able to make 3 devices for $44.43, or just under $15 plus tax per 
 * Cut only the left lead. Add some solder to the stub to make it nicer. Bend the right lead onto the stub - this will serve as an activation button. The wire should not be touching the contact - there should be a tiny gap.
 ![](https://github.com/EugeneFainstain/assets/blob/main/ArduinoLatencyMeter_photos/prepare_board_2.jpg?raw=true)
 
+* Note: if you soldered the phototransistor incorrectly (i.e. in reverse) - don't worry, there is a "#define REVERSE_PHOTOTRANSISTOR" in the code that can solve the problem.
+ 
+### d. Final touch
+
 * Add a piece of the loops part of Velcro (the soft part) to the back of the board. I suggest to add a little piece of it to the USB connector as well - it's not really needed there, but it can serve as a reminder that the connector is fragile and to NOT apply torque force to it (when unplugging the cable) - otherwise it WILL break off...
 ![](https://github.com/EugeneFainstain/assets/blob/main/ArduinoLatencyMeter_photos/prepare_board_3.jpg?raw=true)
 
-* Note: if you soldered the phototransistor incorrectly (i.e. in reverse) - don't worry, there is a "#define REVERSE_PHOTOTRANSISTOR" in the code that can solve the problem.
-
 ## 3. Device placement
 
-- The device should be placed at the top edge of the monitor, approximately in the middle. I mean, it is also possible to place the device in the corner (like I did in the photo at the top) - but it ended up being easier to find suitable measurement scenes if the device was placed in the middle.
+- The device should be placed at the top edge of the monitor, approximately in the middle. I mean, it is also possible to place the device in the corner (like I did in the photo at the top) - but it ended up being easier to find suitable measurement scenes if the device was placed in the middle - see a section called "choosing the right scene for measurement" below.
 - Attach a piece of Velcro to the top of the monitor bezel to hold the device.
 - **IMPORTANT!!!** Be careful with the USB connector on the board - it's rather flimsy and will break off if you try to apply torque force to it. This mostly happens when you try to unstick the device from the Velcro by pulling on the wire towards yourself. :) Consider yourself warned...
 ![](https://github.com/EugeneFainstain/assets/blob/main/ArduinoLatencyMeter_photos/sensor_placement_1.jpg?raw=true)
@@ -105,14 +106,14 @@ Here is what this means:
 Lets start with the obvious first: there is no direct way to measure the framerate by observing the screen, especially if we are only observing a single point on screen.
 That is true for a mostly static image, or for an animation we have no control over. But in our case we DO have control over the animation - we are causing the image to move right and left.
 
-As it turns out, the latency measurements are inherently "noisy" - i.e. they inherently have some measurement error, and the magnitude of that error depends on - you guessed it - the framerate!
-So by analysing the latency measurements and measuring how "noisy" they are (i.e. measuring the standard deviation), we can conclulde what the framerate of the game must be.
+As it turns out, the latency measurements are inherently "noisy" - i.e. they have a "built-in" measurement error (because physics), and the magnitude of that error depends on - you guessed it - the framerate!
+So by analyzing the latency measurements and measuring how "noisy" they are (i.e. measuring the standard deviation), we can conclude what the framerate of the game must be.
 
 A few caveats:
 * It works pretty well under "ideal conditions" - meaning that the game is running fullscreen exclusive, the monitor is a VRR monitor, and the game's framerate is withing the VRR range of the monitor.
-* Even so, the estimated framerate will be in most cases a few percent lower than the actual framerate - because our measurements are not the only source of randomness - there is also the game logic itself and things happenign in the operating system.
+* Even so, the estimated framerate will be in most cases a few percent lower than the actual framerate - because our measurements are not the only source of randomness - there is also the game logic itself and things happening in the operating system.
 This additional randomness increases the standard deviation of the measurements (a bit), and causes the estimated framerate to be a bit lower.
-* Things start getting interesting when the framerate of the game is beyond to VRR range of the monitor. In this case the estimated "effective framerate" will be lower - even lower than the supported VRR range of the monitor,
+* Things start getting interesting when the framerate of the game is beyond the VRR range of the monitor. In this case the estimated "effective framerate" will be lower - even lower than the supported VRR range of the monitor,
 and the average latency will become higher - which is only fair - you won't be getting a response as quickly as you could have been.
 * If you ignore tearing, the "effective framerate" seems to be a good estimate of how "fast on average" your system is rendering.
 
@@ -120,7 +121,10 @@ and the average latency will become higher - which is only fair - you won't be g
 
 To assist with verifying the measurement results using a high-speed camera (read: sanity check), a red LED lights up immediately after the USB command to move the mouse is sent, and is turned off as soon as the movement is detected.
 ![](https://github.com/EugeneFainstain/assets/blob/main/ArduinoLatencyMeter_photos/board_placement_closeup.jpg?raw=true)
-A final note: the measurement is always done when going from darker patch to brighter patch (and not on the back stroke), because:
+
+### g. A final note...
+
+To achieve the best results, the measurement is always done when going from darker patch to brighter patch (and not on the back stroke), because:
 
 1. The speed of light response of the monitor pigment is not symmetrical going from dark to bright vs from bright to dark.
 2. Some (many!) monitors have a flickering backlight, which makes only the "dark to bright" measurement direction possible.
