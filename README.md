@@ -31,7 +31,7 @@ A simple DIY Arduino-based device to measure the input-to-action latency in 3D g
 ### a. What you'll need
 
 * Arduino Pro Micro board (e.g. https://www.amazon.com/dp/B01MTU9GOB - 3 for $22.49)
-* A photoresistor (e.g. https://www.amazon.com/dp/B00M1PMHO4 - 20 for $5.79)
+* A phototransistor (e.g. https://www.amazon.com/dp/B00M1PMHO4 - 20 for $5.79)
 * Some shrink tubes (e.g. https://www.amazon.com/dp/B072PCQ2LW - a lot for $6.99)
 * Some sticky velcro (e.g. https://www.amazon.com/dp/B000TGSPV6 - 4 for $3.47)
 * Box of matches or a lighter (e.g. https://www.amazon.com/dp/B00CKFHYHU - 10 for $5.69)
